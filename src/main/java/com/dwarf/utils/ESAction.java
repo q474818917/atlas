@@ -8,8 +8,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
@@ -64,22 +69,65 @@ public class ESAction {
 	}
 
 	public static void main(String[] args) throws IOException {
-		
-		IndexResponse response = ESAction.getInstance().client.prepareIndex("twitter", "tweet", "1")
-		        .setSource(jsonBuilder()
-		                    .startObject()
-		                        .field("user", "kimchy")
-		                        .field("postDate", new Date())
-		                        .field("message", "trying out Elasticsearch")
-		                    .endObject()
-		                  )
-		        .get();
-		
+		ESAction.getInstance().update("twitter", "tweet", "1");
 		try {
 			Thread.sleep(14400);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public Object get(String index, String type, String idx){
+		GetResponse response = client.prepareGet(index, type, idx).get();
+		System.out.println(response.getSource());
+		return response;
+	}
+	
+	public boolean add(String index, String type, String idx){
+		try {
+			IndexResponse response = ESAction.getInstance().client.prepareIndex(index, type, idx)
+			        .setSource(jsonBuilder()
+			                    .startObject()
+			                        .field("user", "kimchy")
+			                        .field("postDate", new Date())
+			                        .field("message", "trying out Elasticsearch")
+			                    .endObject()
+			                  )
+			        .get();
+			System.out.println(response.isCreated());
+			return response.isCreated();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean delete(String index, String type, String idx){
+		DeleteResponse response = client.prepareDelete(index, type, idx).get();
+		System.out.println(response.isFound());
+		return !response.isFound();
+	}
+	
+	public boolean update(String index, String type, String idx){
+		try{
+			UpdateRequest updateRequest = new UpdateRequest();
+			updateRequest.index(index);
+			updateRequest.type(type);
+			updateRequest.id(idx);
+			updateRequest.doc(jsonBuilder()
+			        .startObject()
+			            .field("user", "wangzx")
+			        .endObject());
+			UpdateResponse response = client.update(updateRequest).get();
+			System.out.println(response.getShardInfo().getSuccessful());
+		}catch(IOException e){
+			e.printStackTrace();
+		}catch(ExecutionException e){
+			e.printStackTrace();
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 }
