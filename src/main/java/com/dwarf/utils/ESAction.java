@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -67,14 +69,55 @@ public class ESAction {
 		}
 		return _ESAction;
 	}
-
+	
+	
+	//QueryBuilders.matchQuery(field, text);
+	
 	public static void main(String[] args) throws IOException {
-		ESAction.getInstance().update("twitter", "tweet", "1");
+		/*ESAction.getInstance().update("twitter", "tweet", "1");
 		try {
 			Thread.sleep(14400);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}*/
+		
+		//matchQuery
+		/*SearchResponse response = ESAction.getInstance().client.prepareSearch("twitter")
+		        .setTypes("tweet")
+		        //.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+		        .setQuery(QueryBuilders.matchQuery("user", "wangzx"))                 // Query
+		        //.setPostFilter(QueryBuilders.rangeQuery("age").from(12).to(18))     // Filter
+		        //.setFrom(0).setSize(60).setExplain(true)
+		        .execute()
+		        .actionGet();*/
+		
+		/*SearchResponse response = ESAction.getInstance().client.prepareSearch("index")
+		        .setTypes("fulltext")
+		        .setQuery(QueryBuilders.matchQuery("content", "中国"))                 
+		        .execute()
+		        .actionGet();
+		
+		SearchHits searchHits = response.getHits();
+		for(SearchHit hit : searchHits.getHits()){
+			System.out.println(hit.getSourceAsString());
+		}*/
+		
+		BulkRequestBuilder bulkRequest = ESAction.getInstance().client.prepareBulk();
+		long t1 = System.currentTimeMillis();
+		for(int i = 0; i < 1000; i ++){
+			bulkRequest.add(client.prepareIndex("twitter", "tweet", i + "")
+			        .setSource(jsonBuilder()
+			                    .startObject()
+			                        .field("user", "kimchy")
+			                        .field("postDate", new Date())
+			                        .field("message", "trying out Elasticsearch")
+			                    .endObject()
+			                  )
+			        );
 		}
+		BulkResponse bulkResponse = bulkRequest.get();
+		long t2 = System.currentTimeMillis();
+		System.out.println("spend time is " + (t2 -t1) + "->" + bulkResponse.hasFailures());
 	}
 	
 	public Object get(String index, String type, String idx){
