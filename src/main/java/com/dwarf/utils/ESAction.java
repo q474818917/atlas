@@ -111,6 +111,7 @@ public class ESAction {
 			                        .field("user", "kimchy")
 			                        .field("postDate", new Date())
 			                        .field("message", "trying out Elasticsearch")
+			                        .field("intro", "i am wangzx")
 			                    .endObject()
 			                  )
 			        );
