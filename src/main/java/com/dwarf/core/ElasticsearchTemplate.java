@@ -2,6 +2,8 @@ package com.dwarf.core;
 
 import static org.elasticsearch.client.Requests.indicesExistsRequest;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
@@ -11,6 +13,9 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuild
 import org.elasticsearch.action.admin.indices.settings.get.GetSettingsRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.Requests;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +27,26 @@ public class ElasticsearchTemplate implements ElasticsearchOperations {
 	private static Logger logger = LoggerFactory.getLogger(ElasticsearchTemplate.class);
 	private Client client;
 	
-	public ElasticsearchTemplate(Client client) {
+	/*public ElasticsearchTemplate(Client client) {
 		this.client = client;
+	}*/
+	
+	public ElasticsearchTemplate(String clusterName, String server, String port){
+		Settings settings = Settings.settingsBuilder()
+		        .put("cluster.name", clusterName).build();
+		
+		TransportClient tsClient = TransportClient.builder().settings(settings).build();
+		for(int i = 0; i < server.split(",").length; i++){
+			try {
+				tsClient.addTransportAddress(new InetSocketTransportAddress(
+						InetAddress.getByName(server.split(",")[i]), Integer.parseInt(port.split(",")[i])));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+		}
+		this.client = tsClient;
 	}
 
 	@Override
