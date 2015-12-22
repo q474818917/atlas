@@ -6,7 +6,7 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 public class HandleIndex {
 
 	public static void main(String[] args) {
-		new HandleIndex().deleteIndex("index");
+		new HandleIndex().deleteIndex("twitter");
 	}
 	
 	public void deleteIndex(String index){

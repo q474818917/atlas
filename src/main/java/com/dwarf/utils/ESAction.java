@@ -24,6 +24,10 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author jiyu
+ *
+ */
 public class ESAction {
 	
 	private static Logger logger = LoggerFactory.getLogger(ESAction.class);
@@ -81,15 +85,6 @@ public class ESAction {
 			e.printStackTrace();
 		}*/
 		
-		//matchQuery
-		/*SearchResponse response = ESAction.getInstance().client.prepareSearch("twitter")
-		        .setTypes("tweet")
-		        //.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-		        .setQuery(QueryBuilders.matchQuery("user", "wangzx"))                 // Query
-		        //.setPostFilter(QueryBuilders.rangeQuery("age").from(12).to(18))     // Filter
-		        //.setFrom(0).setSize(60).setExplain(true)
-		        .execute()
-		        .actionGet();*/
 		
 		/*SearchResponse response = ESAction.getInstance().client.prepareSearch("index")
 		        .setTypes("fulltext")
@@ -102,23 +97,22 @@ public class ESAction {
 			System.out.println(hit.getSourceAsString());
 		}*/
 		
-		BulkRequestBuilder bulkRequest = ESAction.getInstance().client.prepareBulk();
+		/*BulkRequestBuilder bulkRequest = ESAction.getInstance().client.prepareBulk();
 		long t1 = System.currentTimeMillis();
 		for(int i = 0; i < 1000; i ++){
 			bulkRequest.add(client.prepareIndex("twitter", "tweet", i + "")
 			        .setSource(jsonBuilder()
 			                    .startObject()
-			                        .field("user", "kimchy")
-			                        .field("postDate", new Date())
-			                        .field("message", "trying out Elasticsearch")
-			                        .field("intro", "i am wangzx")
+			                        .field("name", "kimchy" + i)
 			                    .endObject()
 			                  )
 			        );
 		}
 		BulkResponse bulkResponse = bulkRequest.get();
 		long t2 = System.currentTimeMillis();
-		System.out.println("spend time is " + (t2 -t1) + "->" + bulkResponse.hasFailures());
+		System.out.println("spend time is " + (t2 -t1) + "->" + bulkResponse.hasFailures());*/
+		
+		ESAction.getInstance().add("twitter", "tweet", "2");
 	}
 	
 	public Object get(String index, String type, String idx){
@@ -132,9 +126,13 @@ public class ESAction {
 			IndexResponse response = ESAction.getInstance().client.prepareIndex(index, type, idx)
 			        .setSource(jsonBuilder()
 			                    .startObject()
-			                        .field("user", "kimchy")
-			                        .field("postDate", new Date())
-			                        .field("message", "trying out Elasticsearch")
+			                        .field("name", "周杰伦")
+			                        .field("age", 30)
+			                        .field("birthday", new Date())
+			                        .field("sex", false)
+			                        //.field("manager.age", 30)
+			                        //.field("manager.name.first", "王")
+			                        //.field("manager.name.last", "尼玛")
 			                    .endObject()
 			                  )
 			        .get();
