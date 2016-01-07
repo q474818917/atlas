@@ -39,7 +39,7 @@ import com.dwarf.utils.ESAction;
 public class UserController {
 	
 	public static void main(String args[]){
-		new UserController().doSearch();
+		new UserController().findBySearch();
 	}
 	
 	private boolean addMapping(){
@@ -294,6 +294,23 @@ public class UserController {
 		for(SearchHit hit : searchHits.getHits()){
 			User user = JSON.parseObject(hit.getSourceAsString(), User.class);
 		}
+	}
+	
+	public void findBySearch(){
+		SearchResponse response = ESAction.getInstance().client.prepareSearch("dmai")
+		        .setTypes("user")
+		        .setQuery(QueryBuilders.queryStringQuery("(id:1343 OR id:1381^2)"))                
+		        .execute()
+		        .actionGet();
+				
+			SearchHits searchHits = response.getHits();
+			for(SearchHit hit : searchHits.getHits()){
+				Map<String, Object> sourceMap = hit.getSource();
+				String sourceJson = JSON.toJSONString(sourceMap);
+				User user = JSON.parseObject(sourceJson, User.class);
+				System.out.println(user);
+			}
+		
 	}
 	
 	private List<Long> getUserCids(long uid) {
