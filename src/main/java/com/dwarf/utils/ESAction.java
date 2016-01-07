@@ -112,7 +112,7 @@ public class ESAction {
 		long t2 = System.currentTimeMillis();
 		System.out.println("spend time is " + (t2 -t1) + "->" + bulkResponse.hasFailures());*/
 		
-		ESAction.getInstance().add("twitter", "tweet", "2");
+		ESAction.getInstance().add("twitter", "tweet", "1");
 	}
 	
 	public Object get(String index, String type, String idx){
@@ -126,8 +126,9 @@ public class ESAction {
 			IndexResponse response = ESAction.getInstance().client.prepareIndex(index, type, idx)
 			        .setSource(jsonBuilder()
 			                    .startObject()
-			                        .field("name", "周杰伦")
-			                        .field("age", 30)
+			                        .field("name", "王振兴")
+			                        .field("text", "ing")
+			                        .field("age", 27)
 			                        .field("birthday", new Date())
 			                        .field("sex", false)
 			                        //.field("manager.age", 30)

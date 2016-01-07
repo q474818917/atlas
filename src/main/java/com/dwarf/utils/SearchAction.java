@@ -16,7 +16,7 @@ public class SearchAction {
 		SearchResponse response = ESAction.getInstance().client.prepareSearch("twitter")
         .setTypes("tweet")
         //.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-        .setQuery(QueryBuilders.matchQuery("name", "振兴"))                
+        .setQuery(QueryBuilders.matchQuery("name", "ing"))                
         .setPostFilter(QueryBuilders.rangeQuery("age").from(25).to(27))    
         .setFrom(0).setSize(60).setExplain(true)
         .execute()
@@ -27,5 +27,7 @@ public class SearchAction {
 			System.out.println(hit.getSourceAsString());
 		}
 	}
+	
+	
 
 }
