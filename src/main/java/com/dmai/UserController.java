@@ -28,6 +28,9 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -39,7 +42,7 @@ import com.dwarf.utils.ESAction;
 public class UserController {
 	
 	public static void main(String args[]){
-		new UserController().findBySearch();
+		new UserController().termsAggregation();
 	}
 	
 	private boolean addMapping(){
@@ -311,6 +314,20 @@ public class UserController {
 				System.out.println(user);
 			}
 		
+	}
+	
+	public void termsAggregation(){
+		SearchResponse response = ESAction.getInstance().client.prepareSearch("dmai")
+		        .setTypes("user")
+		        .addAggregation(AggregationBuilders.terms("aggs").field("app"))
+		        .execute()
+		        .actionGet();
+		Terms genders = response.getAggregations().get("aggs");
+
+		for (Terms.Bucket entry : genders.getBuckets()) {
+		    System.out.println(entry.getKey());      
+		    System.out.println(entry.getDocCount()); 
+		}
 	}
 	
 	private List<Long> getUserCids(long uid) {

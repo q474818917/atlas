@@ -7,4 +7,4 @@
   + 增加mapping
   + bulk批量建索引
   + 以及查询操作queryStringQuery，以及json映射到bean
-  + 后续增加：facet的查询操作（2.1已经合并到agg操作里面了）
+  + 增加terms aggregation 搜索
