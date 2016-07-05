@@ -58,7 +58,7 @@
   </dependencies>
   
   <build>
-    <finalName>solrIndex</finalName>
+    <finalName>atlas</finalName>
     <plugins>  
 	   <plugin>  
 	        <groupId>org.apache.maven.plugins</groupId>  
