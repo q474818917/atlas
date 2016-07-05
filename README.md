@@ -1,6 +1,6 @@
 atlas
 ====
-
+ 
 ###This is the ElasticSearch showcases
  + 版本：elasticsearch 2.1.0, lucene 5.3.1 spring-data-elasticsearch 2.0.0
  + 新增了spring data elasticsearch中的elasticsearchTemplate，其中包括
