@@ -4,7 +4,7 @@
   <groupId>com.dwarf</groupId>
   <artifactId>atlas</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
+  <version>2.0</version>
   <name>atlas</name>
   <url>http://maven.apache.org</url>
   
