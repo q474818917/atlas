@@ -2,9 +2,11 @@ package com.dwarf.utils;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
@@ -51,10 +53,17 @@ public class ESAction {
 	private static Properties prop = new Properties();
 	
 	static {
-		InputStream in = ESAction.class.getClassLoader().getResourceAsStream("server.properties");
+		InputStream in = null;
 		try {
-			prop.load(in);
-			logger.info("server.properties loading succeed");
+			ClassLoader loder = Thread.currentThread().getContextClassLoader();
+			URL url = loder.getResource("server.properties"); // 方式1：配置更新不需要重启JVM
+			if (url != null) {
+				in = new FileInputStream(url.getPath());
+				// in = loder.getResourceAsStream(propertyFileName); // 方式2：配置更新需重启JVM
+				if (in != null) {
+					prop.load(in);
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
