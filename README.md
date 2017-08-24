@@ -1,4 +1,4 @@
-atlas
+atlas:test
 ====
 
 ###This is the ElasticSearch showcases
