@@ -1,8 +1,9 @@
 atlas
+version 1
 ====
 
 ###This is the ElasticSearch showcases
- + 版本：elasticsearch 2.1.0, lucene 5.3.1 spring-data-elasticsearch 2.0.0
+ + 版本：elasticsearch 2.3.5, lucene 5.5.0 spring-data-elasticsearch 2.0.0
  + 新增了spring data elasticsearch中的elasticsearchTemplate，其中包括
   + 创建索引
   + 后续增加：根据映射创建mapping，以及索引数据操作
