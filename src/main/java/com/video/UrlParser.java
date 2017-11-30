@@ -2,6 +2,7 @@ package com.video;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Scanner;
@@ -30,7 +31,7 @@ public class UrlParser {
 	
 	private static Logger logger = LoggerFactory.getLogger(UrlParser.class);
 	private static final String REGEX = "ytplayer.config\\s*=\\s*([^\n]+?});";
-	private static final String URL = "https://www.youtube.com/watch?v=V9gai13qRHo";
+	private static final String URL = "https://www.youtube.com/watch?v=ncfK0vFq114";
 	
 	public static void main(String[] args) {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -157,7 +158,9 @@ public class UrlParser {
 	
 	public static void printInfo(List<VideoFormat> videoFormatList) {
 		videoFormatList.stream().forEach(videoFormat -> {
-			logger.info("itag -> {}, size -> {}", videoFormat.getItag(), videoFormat.getSize());
+			logger.info("itag -> {}, resolution -> {}, size -> {}, ext ->{}", videoFormat.getItag(), 
+					videoFormat.getSize(), 
+					bytes2kb(Long.parseLong(videoFormat.getClen())), videoFormat.getType());
 		});
 	}
 	
@@ -169,5 +172,17 @@ public class UrlParser {
 		}
 		return null;
 	}
-
+	
+	public static String bytes2kb(long bytes) {  
+        BigDecimal filesize = new BigDecimal(bytes);  
+        BigDecimal megabyte = new BigDecimal(1024 * 1024);  
+        float returnValue = filesize.divide(megabyte, 2, BigDecimal.ROUND_UP)  
+                .floatValue();  
+        if (returnValue > 1)  
+            return (returnValue + "MB");  
+        BigDecimal kilobyte = new BigDecimal(1024);  
+        returnValue = filesize.divide(kilobyte, 2, BigDecimal.ROUND_UP)  
+                .floatValue();  
+        return (returnValue + "KB");  
+    }  
 }
