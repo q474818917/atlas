@@ -1,4 +1,5 @@
 atlas
+version 3
 ====
 
 ###This is the ElasticSearch showcases
