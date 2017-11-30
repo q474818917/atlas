@@ -11,8 +11,9 @@ public class App {
 	
 	public static void main(String[] args) {
 		
-		ApplicationContext appContext = new ClassPathXmlApplicationContext(new String[]{
-                "applicationContext.xml"});
+		System.out.println(1+ 2+ "aa" + 3);
+		String s = "1234567";
+		System.out.println(s.substring(2, 4));
 	}
 	
 }
